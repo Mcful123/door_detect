@@ -36,12 +36,7 @@ def convert(cv_im):
     pil_im  = Image.fromarray(cv_im2)
     return pil_im
 
-vid = cv.VideoCapture(0, cv.CAP_DSHOW) 
-
-while(True):
-    _, frame = vid.read()
-    if(frame[0][0][0] == None):
-        continue
+def detect(frame):
     xrd_door = frame[190:420, 480:638]
     furn_door = frame[79:238, 144:224]
     furn_door = cv.resize(xrd_door, (224, 224), interpolation = cv.INTER_AREA)
@@ -53,39 +48,24 @@ while(True):
     furn_status = pred(furn_door_PIL, furn_model)
     
     statuses = {'XRD':xrd_status, 'Furnace': furn_status}
-    cv.imshow('cam', frame)
+    return statuses
     
-    key = cv.waitKey(1)
-    if(key == ord('q')):
-        break
-    elif(key == ord('s')):
-        print(statuses)
-                        
-vid.release()
-cv.destroyAllWindows()
-#%%
-
-import cv2 as cv
-from PIL import Image
-import numpy as np
-
-capture = cv.VideoCapture(0, cv.CAP_DSHOW)
-
-while True:
-    isTrue, frame = capture.read()
-    ii = frame[79:238, 144:216]
-    cv.imshow('webcam', frame)
-    cv.imshow('fg', ii)
-# cv2_im = cv.cvtColor(frame,cv.COLOR_BGR2RGB)
-# pil_im = Image.fromarray(cv2_im)
-# pil_im.show()
-    if(cv.waitKey(1) & 0xFF == ord('q')):
-        break  
-capture.release()
-cv.destroyAllWindows()
-
-
-
-
+if(__name__ == "__main__"):
+    vid = cv.VideoCapture(0, cv.CAP_DSHOW) 
+    while(True):
+        _, frame = vid.read()
+        if(frame[0][0][0] == None):
+            continue
+        statuses = detect(frame)
+        cv.imshow('cam', frame)
+        
+        key = cv.waitKey(1)
+        if(key == ord('q')):
+            break
+        elif(key == ord('s')):
+            print(statuses)
+            
+    vid.release()
+    cv.destroyAllWindows()
 
 
