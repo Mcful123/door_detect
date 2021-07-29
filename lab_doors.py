@@ -32,6 +32,7 @@ def pred(im, mod):
         return 'NA'
 
 def convert(cv_im):
+    cv_im = cv.resize(cv_im, (224,224), interpolation = cv.INTER_AREA)
     cv_im2 = cv.cvtColor(cv_im, cv.COLOR_BGR2RGB)
     pil_im  = Image.fromarray(cv_im2)
     return pil_im
@@ -39,7 +40,6 @@ def convert(cv_im):
 def detect(frame):
     xrd_door = frame[190:420, 480:638]
     furn_door = frame[79:238, 144:224]
-    furn_door = cv.resize(xrd_door, (224, 224), interpolation = cv.INTER_AREA)
     
     xrd_door_PIL = convert(xrd_door)
     furn_door_PIL = convert(furn_door)
